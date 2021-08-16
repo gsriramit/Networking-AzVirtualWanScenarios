@@ -452,10 +452,7 @@
             "type": "Microsoft.Network/vpnServerConfigurations",
             "apiVersion": "2020-05-01",
             "name": "[format('{0}_P2SvpnServerConfiguration', variables('virtual_hub1_cfg').name)]",
-            "location": "[parameters('hub1_location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/expressRouteGateways', format('{0}_ERGW', variables('virtual_hub1_cfg').name))]"
-            ],
+            "location": "[parameters('hub1_location')]",           
             "properties": {
                 "vpnProtocols": [
                     "IkeV2",
