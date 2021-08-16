@@ -1,0 +1,45 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vWANname": {
+            "value": "az-vWan-dev01"
+        },
+        "hub1_location": {
+            "value": "centralindia"
+        },
+        "hub2_location": {
+            "value": "southeastasia"
+        },
+        "Hub1_PublicCertificateDataForP2S": {
+            "value": ""
+        },
+        "Hub2_PublicCertificateDataForP2S": {
+            "value": ""
+        },
+        "vpnsitename":{
+            "value": "site-cindia-dev"
+        },
+        "vpnsiteBgpAsn":{
+            "value": 65050
+        },
+        "vpnsiteBgpPeeringAddress":{
+            "value": "192.168.29.52"
+        },
+        "vpnsitePublicIPAddress":{
+            "value": "49.37.209.33"
+        },
+        "enableBgp": {
+            "value": "true"         
+        },
+        "siteConnectionName":{
+            "value": "conn-s2s-cindia-dev01"
+        },
+        "expressRouteCircuitPeeringRg": {
+            "value": "rg-sharednetwork-dev01"
+        },
+        "expressRouteCircuitName":{
+            "value": "er-primary-sg-dev01"
+        }
+    }
+}

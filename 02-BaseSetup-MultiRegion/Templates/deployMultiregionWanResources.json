@@ -1,0 +1,590 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vWANname": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Virtual WAN Name"
+            }
+        },
+        "hub1_location": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Region for the first Hub"
+            }
+        },
+        "hub2_location": {
+            "type": "string",
+            "metadata": {
+                "description": "Azure Region for the second Hub"
+            }
+        },
+        "Hub1_S2SvpnGatewayScaleUnit": {
+            "type": "int",
+            "defaultValue": 1,
+            "metadata": {
+                "description": "Scale Units for Site-to-Site (S2S) VPN Gateway in the first Hub"
+            }
+        },
+        "Hub2_S2SvpnGatewayScaleUnit": {
+            "type": "int",
+            "defaultValue": 1,
+            "metadata": {
+                "description": "Scale Units for Site-to-Site (S2S) VPN Gateway in the second Hub"
+            }
+        },
+        "Hub1_ExpressRouteGatewayScaleUnit": {
+            "type": "int",
+            "defaultValue": 1,
+            "metadata": {
+                "description": "Scale Units for Express Route Gateway in the first Hub"
+            }
+        },
+        "Hub2_ExpressRouteGatewayScaleUnit": {
+            "type": "int",
+            "defaultValue": 1,
+            "metadata": {
+                "description": "Scale Units for Express Route Gateway in the second Hub"
+            }
+        },
+        "Hub1_P2SvpnGatewayScaleUnit": {
+            "type": "int",
+            "defaultValue": 1,
+            "metadata": {
+                "description": "Scale Units for Point-to-Site (P2S) VPN Gateway in the first Hub"
+            }
+        },
+        "Hub2_P2SvpnGatewayScaleUnit": {
+            "type": "int",
+            "defaultValue": 1,
+            "metadata": {
+                "description": "Scale Units for Point-to-Site (P2S) VPN Gateway in the second Hub"
+            }
+        },
+        "Hub1_PublicCertificateDataForP2S": {
+            "type": "string",
+            "metadata": {
+                "description": "Sample Public Certificate content for Point-to-Site (P2S) authentication in the first Hub (please provide your own once deployment is completed) "
+            }
+        },
+        "Hub2_PublicCertificateDataForP2S": {
+            "type": "string",
+            "metadata": {
+                "description": "Sample Public Certificate content for Point-to-Site (P2S) authentication in the second Hub (please provide your own once deployment is completed) "
+            }
+        },
+        "vpnsitename":{
+            "type": "string"
+        },
+        "vpnsiteBgpAsn":{
+            "type": "int"
+        },
+        "vpnsiteBgpPeeringAddress":{
+            "type": "string"
+        },
+        "vpnsitePublicIPAddress":{
+            "type": "string"
+        },
+        "enableBgp": {
+            "type": "string",
+            "defaultValue": "false",
+            "metadata": {
+                "description": "This needs to be set to true if BGP needs to enabled on the vpn connection."
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ]
+        },
+        "siteConnectionName":{
+            "type": "string"
+        },
+        "expressRouteCircuitPeeringRg": {
+            "type": "string"
+        },
+        "expressRouteCircuitName":{
+            "type": "string"
+        }
+    },
+    "variables": {
+        "vwan_cfg": {
+            "type": "Standard"
+        },
+        "virtual_hub1_cfg": {
+            "name": "vhubvnet1",
+            "addressSpacePrefix": "10.100.0.0/20",
+            "Hub1_P2SvpnClientAddressPoolPrefix": "172.20.100.0/24"
+        },
+        "virtual_hub2_cfg": {
+            "name": "vhubvnet2",
+            "addressSpacePrefix": "10.200.0.0/20",
+            "Hub2_P2SvpnClientAddressPoolPrefix": "172.20.200.0/24"
+        },
+        "vnet1_cfg": {
+            "name": "VNET1",
+            "addressSpacePrefix": "10.10.0.0/16",
+            "subnetName": "subnet1",
+            "subnetPrefix": "10.10.0.0/24"
+        },
+        "vnet2_cfg": {
+            "name": "VNET2",
+            "addressSpacePrefix": "10.11.0.0/24",
+            "subnetName": "subnet1",
+            "subnetPrefix": "10.11.0.0/24"
+        },
+        "vnet3_cfg": {
+            "name": "VNET3",
+            "addressSpacePrefix": "10.20.0.0/16",
+            "subnetName": "subnet1",
+            "subnetPrefix": "10.20.0.0/24"
+        },
+        "vnet4_cfg": {
+            "name": "VNET4",
+            "addressSpacePrefix": "10.21.0.0/16",
+            "subnetName": "subnet1",
+            "subnetPrefix": "10.21.0.0/24"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualWans",
+            "apiVersion": "2020-05-01",
+            "name": "[parameters('vWANname')]",
+            "location": "[parameters('hub1_location')]",
+            "properties": {
+                "allowVnetToVnetTraffic": true,
+                "allowBranchToBranchTraffic": true,
+                "type": "[variables('vwan_cfg').type]"
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualHubs",
+            "apiVersion": "2020-05-01",
+            "name": "[variables('virtual_hub1_cfg').name]",
+            "location": "[parameters('hub1_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualWans', parameters('vWANname'))]"
+            ],
+            "properties": {
+                "addressPrefix": "[variables('virtual_hub1_cfg').addressSpacePrefix]",
+                "virtualWan": {
+                    "id": "[resourceId('Microsoft.Network/virtualWans', parameters('vWANname'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualHubs",
+            "apiVersion": "2020-05-01",
+            "name": "[variables('virtual_hub2_cfg').name]",
+            "location": "[parameters('hub2_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualWans', parameters('vWANname'))]"
+            ],
+            "properties": {
+                "addressPrefix": "[variables('virtual_hub2_cfg').addressSpacePrefix]",
+                "virtualWan": {
+                    "id": "[resourceId('Microsoft.Network/virtualWans', parameters('vWANname'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/vpnSites",
+            "name": "[parameters('vpnsitename')]",
+            "apiVersion": "2020-05-01",
+            "location": "[parameters('hub1_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualWans/', parameters('vWANname'))]"
+            ],
+            "properties": {               
+                "bgpProperties": {
+                    "asn": "[parameters('vpnsiteBgpAsn')]",
+                    "bgpPeeringAddress": "[parameters('vpnsiteBgpPeeringAddress')]",
+                    "peerWeight": 0
+                },
+                "deviceProperties": {
+                    "linkSpeedInMbps": 0
+                },
+                "ipAddress": "[parameters('vpnsitePublicIPAddress')]",
+                "virtualWan": {
+                    "id": "[resourceId('Microsoft.Network/virtualWans',parameters('vWANname'))]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-05-01",
+            "name": "[variables('vnet1_cfg').name]",
+            "location": "[parameters('hub1_location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnet1_cfg').addressSpacePrefix]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('vnet1_cfg').subnetName]",
+                        "properties": {
+                            "addressPrefix": "[variables('vnet1_cfg').subnetPrefix]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-05-01",
+            "name": "[variables('vnet2_cfg').name]",
+            "location": "[parameters('hub1_location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnet2_cfg').addressSpacePrefix]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('vnet2_cfg').subnetName]",
+                        "properties": {
+                            "addressPrefix": "[variables('vnet2_cfg').subnetPrefix]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-05-01",
+            "name": "[variables('vnet3_cfg').name]",
+            "location": "[parameters('hub2_location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnet3_cfg').addressSpacePrefix]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('vnet3_cfg').subnetName]",
+                        "properties": {
+                            "addressPrefix": "[variables('vnet3_cfg').subnetPrefix]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2020-05-01",
+            "name": "[variables('vnet4_cfg').name]",
+            "location": "[parameters('hub2_location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('vnet4_cfg').addressSpacePrefix]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('vnet4_cfg').subnetName]",
+                        "properties": {
+                            "addressPrefix": "[variables('vnet4_cfg').subnetPrefix]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualHubs/hubVirtualNetworkConnections",
+            "apiVersion": "2020-05-01",
+            "name": "[format('{0}/{1}_connection', variables('virtual_hub1_cfg').name, variables('vnet1_cfg').name)]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub1_cfg').name)]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet1_cfg').name)]",
+                "[resourceId('Microsoft.Network/vpnGateways', format('{0}_S2SvpnGW', variables('virtual_hub1_cfg').name))]"
+            ],
+            "properties": {
+                "remoteVirtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet1_cfg').name)]"
+                },
+                "allowHubToRemoteVnetTransit": true,
+                "allowRemoteVnetToUseHubVnetGateways": true,
+                "enableInternetSecurity": true
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualHubs/hubVirtualNetworkConnections",
+            "apiVersion": "2020-05-01",
+            "name": "[format('{0}/{1}_connection', variables('virtual_hub1_cfg').name, variables('vnet2_cfg').name)]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub1_cfg').name)]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet2_cfg').name)]",
+                "[resourceId('Microsoft.Network/virtualHubs/hubVirtualNetworkConnections', variables('virtual_hub1_cfg').name, format('{0}_connection', variables('vnet1_cfg').name))]"
+            ],
+            "properties": {
+                "remoteVirtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet2_cfg').name)]"
+                },
+                "allowHubToRemoteVnetTransit": true,
+                "allowRemoteVnetToUseHubVnetGateways": true,
+                "enableInternetSecurity": true
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualHubs/hubVirtualNetworkConnections",
+            "apiVersion": "2020-05-01",
+            "name": "[format('{0}/{1}_connection', variables('virtual_hub2_cfg').name, variables('vnet3_cfg').name)]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub2_cfg').name)]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet3_cfg').name)]"
+            ],
+            "properties": {
+                "remoteVirtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet3_cfg').name)]"
+                },
+                "allowHubToRemoteVnetTransit": true,
+                "allowRemoteVnetToUseHubVnetGateways": true,
+                "enableInternetSecurity": true
+            }
+        },
+        {
+            "type": "Microsoft.Network/virtualHubs/hubVirtualNetworkConnections",
+            "apiVersion": "2020-05-01",
+            "name": "[format('{0}/{1}_connection', variables('virtual_hub2_cfg').name, variables('vnet4_cfg').name)]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub2_cfg').name)]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet4_cfg').name)]",
+                "[resourceId('Microsoft.Network/virtualHubs/hubVirtualNetworkConnections', variables('virtual_hub2_cfg').name, format('{0}_connection', variables('vnet3_cfg').name))]"
+            ],
+            "properties": {
+                "remoteVirtualNetwork": {
+                    "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet4_cfg').name)]"
+                },
+                "allowHubToRemoteVnetTransit": true,
+                "allowRemoteVnetToUseHubVnetGateways": true,
+                "enableInternetSecurity": true
+            }
+        },
+        {
+            "type": "Microsoft.Network/vpnGateways",
+            "name": "[format('{0}_S2SvpnGW', variables('virtual_hub1_cfg').name)]",
+            "apiVersion": "2020-05-01",
+            "location": "[parameters('hub1_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub1_cfg').name)]"
+            ],
+            "properties": {
+                "vpnGatewayScaleUnit": "[parameters('Hub1_S2SvpnGatewayScaleUnit')]",
+                 "connections": [
+                    {
+                        "name": "[parameters('siteConnectionName')]",
+                        "properties": {
+                            "connectionBandwidth": 10,
+                            "enableBgp": "[parameters('enableBgp')]",
+                            "remoteVpnSite": {
+                                "id": "[resourceId('Microsoft.Network/vpnSites', parameters('vpnsitename'))]"
+                            }
+                        }
+                    }
+                ],
+                "virtualHub": {
+                    "id": "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub1_cfg').name)]"
+                },
+                "bgpSettings": {
+                    "asn": 65515
+                }
+            }
+        },       
+        {
+            "type": "Microsoft.Network/expressRouteGateways",
+            "apiVersion": "2020-05-01",
+            "name": "[format('{0}_ERGW', variables('virtual_hub2_cfg').name)]",
+            "location": "[parameters('hub2_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs/hubVirtualNetworkConnections', variables('virtual_hub2_cfg').name, format('{0}_connection', variables('vnet4_cfg').name))]"
+            ],
+            "properties": {
+                "virtualHub": {
+                    "id": "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub2_cfg').name)]"
+                },
+                "autoScaleConfiguration": {
+                    "bounds": {
+                        "min": "[parameters('Hub2_ExpressRouteGatewayScaleUnit')]"
+                    }
+                }
+            }
+        },
+                {
+            "type": "Microsoft.Network/expressRouteGateways/expressRouteConnections",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(format('{0}_ERGW', variables('virtual_hub2_cfg').name), '/ExRConnection-southeastasia-dev001')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/expressRouteGateways', format('{0}_ERGW', variables('virtual_hub2_cfg').name))]"
+            ],
+            "properties": {
+                "routingConfiguration": {
+                    "associatedRouteTable": {
+                        "id": "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub2_cfg').name,'defaultRouteTable')]"
+                    },
+                    "propagatedRouteTables": {
+                        "labels": [
+                            "default"
+                        ],
+                        "ids": [
+                            {
+                                "id": "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub2_cfg').name,'defaultRouteTable')]"
+                            }
+                        ]
+                    },
+                    "vnetRoutes": {
+                        "staticRoutes": []
+                    }
+                },
+                "expressRouteCircuitPeering": {
+                    "id": "[concat(subscription().id,'/resourceGroups/',parameters('expressRouteCircuitPeeringRg'),'/providers/Microsoft.Network/expressRouteCircuits/', parameters('expressRouteCircuitName'), '/peerings/AzurePrivatePeering')]"
+                },
+                "routingWeight": 0,
+                "enableInternetSecurity": false
+            }
+        },
+        {
+            "type": "Microsoft.Network/vpnServerConfigurations",
+            "apiVersion": "2020-05-01",
+            "name": "[format('{0}_P2SvpnServerConfiguration', variables('virtual_hub1_cfg').name)]",
+            "location": "[parameters('hub1_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/expressRouteGateways', format('{0}_ERGW', variables('virtual_hub1_cfg').name))]"
+            ],
+            "properties": {
+                "vpnProtocols": [
+                    "IkeV2",
+                    "OpenVPN"
+                ],
+                "vpnAuthenticationTypes": [
+                    "Certificate"
+                ],
+                "vpnClientRootCertificates": [
+                    {
+                        "name": "P2SRootCertHub1",
+                        "publicCertData": "[parameters('Hub1_PublicCertificateDataForP2S')]"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/vpnServerConfigurations",
+            "apiVersion": "2020-05-01",
+            "name": "[format('{0}_P2SvpnServerConfiguration', variables('virtual_hub2_cfg').name)]",
+            "location": "[parameters('hub2_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/expressRouteGateways', format('{0}_ERGW', variables('virtual_hub2_cfg').name))]"
+            ],
+            "properties": {
+                "vpnProtocols": [
+                    "IkeV2",
+                    "OpenVPN"
+                ],
+                "vpnAuthenticationTypes": [
+                    "Certificate"
+                ],
+                "vpnClientRootCertificates": [
+                    {
+                        "name": "P2SRootCertHub2",
+                        "publicCertData": "[parameters('Hub2_PublicCertificateDataForP2S')]"
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/p2sVpnGateways",
+            "apiVersion": "2020-05-01",
+            "name": "[format('{0}_P2Sgateway', variables('virtual_hub1_cfg').name)]",
+            "location": "[parameters('hub1_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/vpnServerConfigurations', format('{0}_P2SvpnServerConfiguration', variables('virtual_hub1_cfg').name))]"
+            ],
+            "properties": {
+                "virtualHub": {
+                    "id": "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub1_cfg').name)]"
+                },
+                "vpnServerConfiguration": {
+                    "id": "[resourceId('Microsoft.Network/vpnServerConfigurations', format('{0}_P2SvpnServerConfiguration', variables('virtual_hub1_cfg').name))]"
+                },
+                "p2SConnectionConfigurations": [
+                    {
+                        "name": "Hub1_P2SConnectionConfigDefault",
+                        "properties": {
+                            "routingConfiguration": {
+                                "associatedRouteTable": {
+                                    "id": "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub1_cfg').name,'defaultRouteTable')]"
+                                },
+                                "propagatedRouteTables": {
+                                    "labels": [
+                                        "default"
+                                    ],
+                                    "ids": [
+                                        {
+                                            "id": "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub1_cfg').name,'defaultRouteTable')]"
+                                        }
+                                    ]
+                                }
+                            },
+                            "vpnClientAddressPool": {
+                                "addressPrefixes": [
+                                    "[variables('virtual_hub1_cfg').Hub1_P2SvpnClientAddressPoolPrefix]"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "vpnGatewayScaleUnit": "[parameters('Hub1_P2SvpnGatewayScaleUnit')]"
+            }
+        },
+        {
+            "type": "Microsoft.Network/p2sVpnGateways",
+            "apiVersion": "2020-05-01",
+            "name": "[format('{0}_P2Sgateway', variables('virtual_hub2_cfg').name)]",
+            "location": "[parameters('hub2_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/vpnServerConfigurations', format('{0}_P2SvpnServerConfiguration', variables('virtual_hub2_cfg').name))]"
+            ],
+            "properties": {
+                "virtualHub": {
+                    "id": "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub2_cfg').name)]"
+                },
+                "vpnServerConfiguration": {
+                    "id": "[resourceId('Microsoft.Network/vpnServerConfigurations', format('{0}_P2SvpnServerConfiguration', variables('virtual_hub2_cfg').name))]"
+                },
+                "p2SConnectionConfigurations": [
+                    {
+                        "name": "Hub2_P2SConnectionConfigDefault",
+                        "properties": {
+                            "routingConfiguration": {
+                                "associatedRouteTable": {
+                                    "id": "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub2_cfg').name,'defaultRouteTable')]"
+                                },
+                                "propagatedRouteTables": {
+                                    "labels": [
+                                        "default"
+                                    ],
+                                    "ids": [
+                                        {
+                                            "id": "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub2_cfg').name,'defaultRouteTable')]"
+                                        }
+                                    ]
+                                }
+                            },
+                            "vpnClientAddressPool": {
+                                "addressPrefixes": [
+                                    "[variables('virtual_hub2_cfg').Hub2_P2SvpnClientAddressPoolPrefix]"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "vpnGatewayScaleUnit": "[parameters('Hub2_P2SvpnGatewayScaleUnit')]"
+            }
+        }
+    ]
+}
