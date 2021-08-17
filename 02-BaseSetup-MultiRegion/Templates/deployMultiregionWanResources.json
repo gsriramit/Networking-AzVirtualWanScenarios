@@ -74,16 +74,16 @@
                 "description": "Sample Public Certificate content for Point-to-Site (P2S) authentication in the second Hub (please provide your own once deployment is completed) "
             }
         },
-        "vpnsitename":{
+        "vpnsitename": {
             "type": "string"
         },
-        "vpnsiteBgpAsn":{
+        "vpnsiteBgpAsn": {
             "type": "int"
         },
-        "vpnsiteBgpPeeringAddress":{
+        "vpnsiteBgpPeeringAddress": {
             "type": "string"
         },
-        "vpnsitePublicIPAddress":{
+        "vpnsitePublicIPAddress": {
             "type": "string"
         },
         "enableBgp": {
@@ -97,13 +97,13 @@
                 "false"
             ]
         },
-        "siteConnectionName":{
+        "siteConnectionName": {
             "type": "string"
         },
         "expressRouteCircuitPeeringRg": {
             "type": "string"
         },
-        "expressRouteCircuitName":{
+        "expressRouteCircuitName": {
             "type": "string"
         }
     },
@@ -196,7 +196,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualWans/', parameters('vWANname'))]"
             ],
-            "properties": {               
+            "properties": {
                 "bgpProperties": {
                     "asn": "[parameters('vpnsiteBgpAsn')]",
                     "bgpPeeringAddress": "[parameters('vpnsiteBgpPeeringAddress')]",
@@ -337,7 +337,8 @@
             "name": "[format('{0}/{1}_connection', variables('virtual_hub2_cfg').name, variables('vnet3_cfg').name)]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub2_cfg').name)]",
-                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet3_cfg').name)]"
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet3_cfg').name)]",
+                "[resourceId('Microsoft.Network/vpnGateways', format('{0}_S2SvpnGW', variables('virtual_hub2_cfg').name))]"
             ],
             "properties": {
                 "remoteVirtualNetwork": {
@@ -376,7 +377,7 @@
             ],
             "properties": {
                 "vpnGatewayScaleUnit": "[parameters('Hub1_S2SvpnGatewayScaleUnit')]",
-                 "connections": [
+                "connections": [
                     {
                         "name": "[parameters('siteConnectionName')]",
                         "properties": {
@@ -395,7 +396,25 @@
                     "asn": 65515
                 }
             }
-        },       
+        },
+         {
+            "type": "Microsoft.Network/vpnGateways",
+            "name": "[format('{0}_S2SvpnGW', variables('virtual_hub2_cfg').name)]",
+            "apiVersion": "2020-05-01",
+            "location": "[parameters('hub2_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub2_cfg').name)]"
+            ],
+            "properties": {
+                "vpnGatewayScaleUnit": "[parameters('Hub2_S2SvpnGatewayScaleUnit')]",
+                "virtualHub": {
+                    "id": "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub2_cfg').name)]"
+                },
+                "bgpSettings": {
+                    "asn": 65515
+                }
+            }
+        },
         {
             "type": "Microsoft.Network/expressRouteGateways",
             "apiVersion": "2020-05-01",
@@ -415,7 +434,7 @@
                 }
             }
         },
-                {
+        {
             "type": "Microsoft.Network/expressRouteGateways/expressRouteConnections",
             "apiVersion": "2020-11-01",
             "name": "[concat(format('{0}_ERGW', variables('virtual_hub2_cfg').name), '/ExRConnection-southeastasia-dev001')]",
@@ -452,7 +471,7 @@
             "type": "Microsoft.Network/vpnServerConfigurations",
             "apiVersion": "2020-05-01",
             "name": "[format('{0}_P2SvpnServerConfiguration', variables('virtual_hub1_cfg').name)]",
-            "location": "[parameters('hub1_location')]",           
+            "location": "[parameters('hub1_location')]",
             "properties": {
                 "vpnProtocols": [
                     "IkeV2",
