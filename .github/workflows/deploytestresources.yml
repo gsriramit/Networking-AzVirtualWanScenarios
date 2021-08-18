@@ -1,5 +1,5 @@
 on: workflow_dispatch
-name: Multiregion-vWan-Deployment
+name: TestServers-Deployment
 jobs:
   build-and-deploy:
     runs-on: windows-latest
