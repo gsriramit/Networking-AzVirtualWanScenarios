@@ -6,7 +6,7 @@
             "value": "southeastasia"
         },
         "networkInterfaceName": {
-            "value": "vm-wl-dev-001713"
+            "value": "vm-wl-dev-001720"
         },
         "subnetName": {
             "value": "subnet1"
@@ -15,10 +15,10 @@
             "value":"vnet-reg2-spoke2"
         },
         "virtualMachineName": {
-            "value": "vm-wl-dev-01"
+            "value": "vm-wl-dev-04"
         },
         "virtualMachineComputerName": {
-            "value": "vm-wl-dev-01"
+            "value": "vm-wl-dev-04"
         },
         "osDiskType": {
             "value": "StandardSSD_LRS"

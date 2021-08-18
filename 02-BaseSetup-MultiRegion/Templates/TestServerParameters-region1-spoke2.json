@@ -6,7 +6,7 @@
             "value": "centralindia"
         },
         "networkInterfaceName": {
-            "value": "vm-wl-dev-001713"
+            "value": "vm-wl-dev-001715"
         },
         "subnetName": {
             "value": "subnet1"
@@ -15,10 +15,10 @@
             "value":"vnet-reg1-spoke2"
         },
         "virtualMachineName": {
-            "value": "vm-wl-dev-01"
+            "value": "vm-wl-dev-02"
         },
         "virtualMachineComputerName": {
-            "value": "vm-wl-dev-01"
+            "value": "vm-wl-dev-02"
         },
         "osDiskType": {
             "value": "StandardSSD_LRS"
