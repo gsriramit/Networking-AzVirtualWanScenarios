@@ -27,7 +27,7 @@
             "value": "192.168.29.52"
         },
         "vpnsitePublicIPAddress":{
-            "value": "49.37.211.63"
+            "value": "49.37.211.87"
         },
         "enableBgp": {
             "value": "true"         

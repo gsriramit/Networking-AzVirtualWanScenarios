@@ -1,0 +1,51 @@
+on: workflow_dispatch
+name: Multiregion-vWan-Deployment
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+    steps:
+
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true
+        
+    - name: Run ARM deploy for Test Servers in region1-spoke1
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_360 }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./02-BaseSetup-MultiRegion/Templates/TestServerTemplate.json
+        parameters: ./02-BaseSetup-MultiRegion/Templates/TestServerParameters-region1-spoke1.json
+
+    - name: Run ARM deploy for Test Servers in region1-spoke2
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_360 }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./02-BaseSetup-MultiRegion/Templates/TestServerTemplate.json
+        parameters: ./02-BaseSetup-MultiRegion/Templates/TestServerParameters-region1-spoke2.json
+
+    - name: Run ARM deploy for Test Servers in region2-spoke1
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_360 }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./02-BaseSetup-MultiRegion/Templates/TestServerTemplate.json
+        parameters: ./02-BaseSetup-MultiRegion/Templates/TestServerParameters-region2-spoke1.json
+
+    - name: Run ARM deploy for Test Servers in region2-spoke2
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_360 }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./02-BaseSetup-MultiRegion/Templates/TestServerTemplate.json
+        parameters: ./02-BaseSetup-MultiRegion/Templates/TestServerParameters-region2-spoke2.json
+
+
+      # output containerName variable from template
+    # - run: echo ${{ steps.deploy.outputs.containerName }}

@@ -1,0 +1,60 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "centralindia"
+        },
+        "networkInterfaceName": {
+            "value": "vm-wl-dev-001713"
+        },
+        "subnetName": {
+            "value": "subnet1"
+        },
+        "virtualNetworkName":{
+            "value":"vnet-reg1-spoke1"
+        },
+        "virtualMachineName": {
+            "value": "vm-wl-dev-01"
+        },
+        "virtualMachineComputerName": {
+            "value": "vm-wl-dev-01"
+        },
+        "osDiskType": {
+            "value": "StandardSSD_LRS"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_DS1_v2"
+        },
+        "adminUsername": {
+            "value": "adminaccount"
+        },
+        "adminPassword": {
+            "value": "adminpwd#123"
+        },
+        "patchMode": {
+            "value": "AutomaticByOS"
+        },
+        "enableHotpatching": {
+            "value": false
+        },
+        "autoShutdownStatus": {
+            "value": "Enabled"
+        },
+        "autoShutdownTime": {
+            "value": "19:00"
+        },
+        "autoShutdownTimeZone": {
+            "value": "UTC"
+        },
+        "autoShutdownNotificationStatus": {
+            "value": "Enabled"
+        },
+        "autoShutdownNotificationLocale": {
+            "value": "en"
+        },
+        "autoShutdownNotificationEmail": {
+            "value": "gsriramit@gmail.com"
+        }
+    }
+}
