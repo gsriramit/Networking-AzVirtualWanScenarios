@@ -12,10 +12,10 @@
             "value": "southeastasia"
         },
         "Hub1_PublicCertificateDataForP2S": {
-            "value": ""
+            "value": "MIIC5zCCAc+gAwIBAgIQNWG4nWgPJoJOYjiHL3F36TANBgkqhkiG9w0BAQsFADAW MRQwEgYDVQQDDAtQMlNSb290Q2VydDAeFw0yMTAyMjUxMTUzMjRaFw0yMjAyMjUx MjEzMjRaMBYxFDASBgNVBAMMC1AyU1Jvb3RDZXJ0MIIBIjANBgkqhkiG9w0BAQEF AAOCAQ8AMIIBCgKCAQEAvFhJmvDXC+7hwfHhizdWlsXgFt5Q1Gc+Jgj14jVtt1a4 rNxU5X/zLNb5jphymNMGiWvzVhrnQWXPL+AVW1V51Gn12TF5L5uTPHOUzNWAsSRm TsRCbCEqWbft5MbZWrybvtf9BBqwKVK4ImWp+Ydr1hlam4Hisi0YQsHwZCclMr3G LeXXW4rE/y8mli96ixZc3LZmhWUvg/Gm2x3TQiAxuz+2zDy6jo8pOrr0NnGs0Zfe QKx6A7q6wj1fm/6Ogy95//bUuDiNZIGBn4iwUidx5cWI6QWHnyj+hhUELLL4XUp6 tMoH057rVK09zsQnuL7cRivA2c0z0Njho7w0Pwm1yQIDAQABozEwLzAOBgNVHQ8B Af8EBAMCAgQwHQYDVR0OBBYEFD+BWuSHMt7hGp2elUdyuPuujyQkMA0GCSqGSIb3 DQEBCwUAA4IBAQCdJN5WGYmb77VIXvmWBBKMPM3khb//qS6gQ7Xn/gHdN3COEBUY zkhV4lq8pAVjGdr22eGWQRJofqKho0HPhZ34txzn9MnCQTFmTXnX+eNVPUI2UJsw K/xFB8b2t+43LvcoPrFyrKE7nieCXdiI7sW1RSSaZHmSz8ixM4y/mwYT4G63wCV+ JVD/ZXJuEf73mo+ipvtJf39JDD3tKvW9N8gKeLcMUGiaoc7DICdWkgKo+dSzdmsS AHkBqJs0r2UjLczEHq0NVLCxDYkucR039LTmNwagLyJI2QdjlcPsk3Exw1G53T73 IDebski2ds3jKF+VYvjuGbRxSo9JCUBFVXXB"
         },
         "Hub2_PublicCertificateDataForP2S": {
-            "value": ""
+            "value": "MIIC5zCCAc+gAwIBAgIQNWG4nWgPJoJOYjiHL3F36TANBgkqhkiG9w0BAQsFADAW MRQwEgYDVQQDDAtQMlNSb290Q2VydDAeFw0yMTAyMjUxMTUzMjRaFw0yMjAyMjUx MjEzMjRaMBYxFDASBgNVBAMMC1AyU1Jvb3RDZXJ0MIIBIjANBgkqhkiG9w0BAQEF AAOCAQ8AMIIBCgKCAQEAvFhJmvDXC+7hwfHhizdWlsXgFt5Q1Gc+Jgj14jVtt1a4 rNxU5X/zLNb5jphymNMGiWvzVhrnQWXPL+AVW1V51Gn12TF5L5uTPHOUzNWAsSRm TsRCbCEqWbft5MbZWrybvtf9BBqwKVK4ImWp+Ydr1hlam4Hisi0YQsHwZCclMr3G LeXXW4rE/y8mli96ixZc3LZmhWUvg/Gm2x3TQiAxuz+2zDy6jo8pOrr0NnGs0Zfe QKx6A7q6wj1fm/6Ogy95//bUuDiNZIGBn4iwUidx5cWI6QWHnyj+hhUELLL4XUp6 tMoH057rVK09zsQnuL7cRivA2c0z0Njho7w0Pwm1yQIDAQABozEwLzAOBgNVHQ8B Af8EBAMCAgQwHQYDVR0OBBYEFD+BWuSHMt7hGp2elUdyuPuujyQkMA0GCSqGSIb3 DQEBCwUAA4IBAQCdJN5WGYmb77VIXvmWBBKMPM3khb//qS6gQ7Xn/gHdN3COEBUY zkhV4lq8pAVjGdr22eGWQRJofqKho0HPhZ34txzn9MnCQTFmTXnX+eNVPUI2UJsw K/xFB8b2t+43LvcoPrFyrKE7nieCXdiI7sW1RSSaZHmSz8ixM4y/mwYT4G63wCV+ JVD/ZXJuEf73mo+ipvtJf39JDD3tKvW9N8gKeLcMUGiaoc7DICdWkgKo+dSzdmsS AHkBqJs0r2UjLczEHq0NVLCxDYkucR039LTmNwagLyJI2QdjlcPsk3Exw1G53T73 IDebski2ds3jKF+VYvjuGbRxSo9JCUBFVXXB"
         },
         "vpnsitename":{
             "value": "site-cindia-dev"
@@ -27,7 +27,7 @@
             "value": "192.168.29.52"
         },
         "vpnsitePublicIPAddress":{
-            "value": "49.37.209.33"
+            "value": "49.37.211.63"
         },
         "enableBgp": {
             "value": "true"         
@@ -40,6 +40,12 @@
         },
         "expressRouteCircuitName":{
             "value": "er-primary-sg-dev01"
+        },
+        "hub1_allowBranchToBranchTraffic": {
+            "value": true
+        },
+         "hub2_allowBranchToBranchTraffic": {
+            "value": true
         }
     }
 }

@@ -105,6 +105,12 @@
         },
         "expressRouteCircuitName": {
             "type": "string"
+        },
+        "hub1_allowBranchToBranchTraffic": {
+            "type": "bool"
+        },
+         "hub2_allowBranchToBranchTraffic": {
+            "type": "bool"
         }
     },
     "variables": {
@@ -122,28 +128,36 @@
             "Hub2_P2SvpnClientAddressPoolPrefix": "172.20.200.0/24"
         },
         "vnet1_cfg": {
-            "name": "VNET1",
+            "name": "vnet-reg1-spoke1",
             "addressSpacePrefix": "10.10.0.0/16",
             "subnetName": "subnet1",
-            "subnetPrefix": "10.10.0.0/24"
+            "subnetPrefix": "10.10.0.0/24",
+            "bastionSubnetName": "AzureBastionSubnet",
+            "bastionPrefix": "10.10.1.0/27"
         },
         "vnet2_cfg": {
-            "name": "VNET2",
-            "addressSpacePrefix": "10.11.0.0/24",
+            "name": "vnet-reg1-spoke2",
+            "addressSpacePrefix": "10.11.0.0/16",
             "subnetName": "subnet1",
-            "subnetPrefix": "10.11.0.0/24"
+            "subnetPrefix": "10.11.0.0/24",
+            "bastionSubnetName": "AzureBastionSubnet",
+            "bastionPrefix": "10.11.1.0/27"
         },
         "vnet3_cfg": {
-            "name": "VNET3",
+            "name": "vnet-reg2-spoke1",
             "addressSpacePrefix": "10.20.0.0/16",
             "subnetName": "subnet1",
-            "subnetPrefix": "10.20.0.0/24"
+            "subnetPrefix": "10.20.0.0/24",
+            "bastionSubnetName": "AzureBastionSubnet",
+            "bastionPrefix": "10.20.1.0/27"
         },
         "vnet4_cfg": {
-            "name": "VNET4",
+            "name": "vnet-reg2-spoke2",
             "addressSpacePrefix": "10.21.0.0/16",
             "subnetName": "subnet1",
-            "subnetPrefix": "10.21.0.0/24"
+            "subnetPrefix": "10.21.0.0/24",
+            "bastionSubnetName": "AzureBastionSubnet",
+            "bastionPrefix": "10.21.1.0/27"
         }
     },
     "resources": [
@@ -170,7 +184,8 @@
                 "addressPrefix": "[variables('virtual_hub1_cfg').addressSpacePrefix]",
                 "virtualWan": {
                     "id": "[resourceId('Microsoft.Network/virtualWans', parameters('vWANname'))]"
-                }
+                },
+                "allowBranchToBranchTraffic": "[parameters('hub1_allowBranchToBranchTraffic')]"
             }
         },
         {
@@ -185,7 +200,8 @@
                 "addressPrefix": "[variables('virtual_hub2_cfg').addressSpacePrefix]",
                 "virtualWan": {
                     "id": "[resourceId('Microsoft.Network/virtualWans', parameters('vWANname'))]"
-                }
+                },
+                "allowBranchToBranchTraffic": "[parameters('hub2_allowBranchToBranchTraffic')]"
             }
         },
         {
@@ -228,6 +244,12 @@
                         "properties": {
                             "addressPrefix": "[variables('vnet1_cfg').subnetPrefix]"
                         }
+                    },
+                    {
+                        "name": "[variables('vnet1_cfg').bastionSubnetName]",
+                        "properties": {
+                            "addressPrefix": "[variables('vnet1_cfg').bastionPrefix]"
+                        }
                     }
                 ]
             }
@@ -248,6 +270,12 @@
                         "name": "[variables('vnet2_cfg').subnetName]",
                         "properties": {
                             "addressPrefix": "[variables('vnet2_cfg').subnetPrefix]"
+                        }
+                    },
+                    {
+                        "name": "[variables('vnet2_cfg').bastionSubnetName]",
+                        "properties": {
+                            "addressPrefix": "[variables('vnet2_cfg').bastionPrefix]"
                         }
                     }
                 ]
@@ -270,6 +298,12 @@
                         "properties": {
                             "addressPrefix": "[variables('vnet3_cfg').subnetPrefix]"
                         }
+                    },
+                    {
+                        "name": "[variables('vnet3_cfg').bastionSubnetName]",
+                        "properties": {
+                            "addressPrefix": "[variables('vnet3_cfg').bastionPrefix]"
+                        }
                     }
                 ]
             }
@@ -290,6 +324,12 @@
                         "name": "[variables('vnet4_cfg').subnetName]",
                         "properties": {
                             "addressPrefix": "[variables('vnet4_cfg').subnetPrefix]"
+                        }
+                    },
+                    {
+                        "name": "[variables('vnet4_cfg').bastionSubnetName]",
+                        "properties": {
+                            "addressPrefix": "[variables('vnet4_cfg').bastionPrefix]"
                         }
                     }
                 ]
@@ -397,7 +437,7 @@
                 }
             }
         },
-         {
+        {
             "type": "Microsoft.Network/vpnGateways",
             "name": "[format('{0}_S2SvpnGW', variables('virtual_hub2_cfg').name)]",
             "apiVersion": "2020-05-01",
