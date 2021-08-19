@@ -20,6 +20,7 @@ jobs:
         
     - name: Run ARM deploy for Test Servers in region1-spoke1
       uses: azure/arm-deploy@v1
+      if: ${{ env.DEPLOY_MULTIREGION == true }}
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_360 }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
@@ -28,6 +29,7 @@ jobs:
 
     - name: Run ARM deploy for Test Servers in region1-spoke2
       uses: azure/arm-deploy@v1
+      if: ${{ env.DEPLOY_MULTIREGION == true }}
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_360 }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
@@ -35,8 +37,7 @@ jobs:
         parameters: ./02-BaseSetup-MultiRegion/Templates/TestServerParameters-region1-spoke2.json
 
     - name: Run ARM deploy for Test Servers in region2-spoke1
-      uses: azure/arm-deploy@v1
-      if: ${{ env.DEPLOY_MULTIREGION == true }}
+      uses: azure/arm-deploy@v1     
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_360 }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
@@ -45,7 +46,6 @@ jobs:
 
     - name: Run ARM deploy for Test Servers in region2-spoke2
       uses: azure/arm-deploy@v1
-      if: ${{ env.DEPLOY_MULTIREGION == true }}
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_360 }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
