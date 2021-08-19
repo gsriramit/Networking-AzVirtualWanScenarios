@@ -37,6 +37,9 @@
         },
         "hub_allowBranchToBranchTraffic": {
             "value": true
+        },
+        "deployExpressRouteResources":{
+            "value": false
         }
     }
 }

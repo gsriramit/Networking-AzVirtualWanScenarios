@@ -75,6 +75,10 @@
         },
         "hub_allowBranchToBranchTraffic": {
             "type": "bool"
+        },
+        "deployExpressRouteResources":{
+            "type": "bool",
+            "defaultValue": true
         }
     },
     "variables": {
@@ -289,6 +293,60 @@
                 }
             }
         }, 
+         {
+             "condition": "[parameters('deployExpressRouteResources')]",
+            "type": "Microsoft.Network/expressRouteGateways",
+            "apiVersion": "2020-05-01",
+            "name": "[format('{0}_ERGW', variables('virtual_hub_cfg').name)]",
+            "location": "[parameters('hub_location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualHubs/hubVirtualNetworkConnections', variables('virtual_hub_cfg').name, format('{0}_connection', variables('vnet2_cfg').name))]"
+            ],
+            "properties": {
+                "virtualHub": {
+                    "id": "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub_cfg').name)]"
+                },
+                "autoScaleConfiguration": {
+                    "bounds": {
+                        "min": "[parameters('Hub_ExpressRouteGatewayScaleUnit')]"
+                    }
+                }
+            }
+        },
+        {
+             "condition": "[parameters('deployExpressRouteResources')]",
+            "type": "Microsoft.Network/expressRouteGateways/expressRouteConnections",
+            "apiVersion": "2020-11-01",
+            "name": "[concat(format('{0}_ERGW', variables('virtual_hub_cfg').name), '/ExRConnection-southeastasia-dev001')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/expressRouteGateways', format('{0}_ERGW', variables('virtual_hub_cfg').name))]"
+            ],
+            "properties": {
+                "routingConfiguration": {
+                    "associatedRouteTable": {
+                        "id": "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub_cfg').name,'defaultRouteTable')]"
+                    },
+                    "propagatedRouteTables": {
+                        "labels": [
+                            "default"
+                        ],
+                        "ids": [
+                            {
+                                "id": "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub_cfg').name,'defaultRouteTable')]"
+                            }
+                        ]
+                    },
+                    "vnetRoutes": {
+                        "staticRoutes": []
+                    }
+                },
+                "expressRouteCircuitPeering": {
+                    "id": "[concat(subscription().id,'/resourceGroups/',parameters('expressRouteCircuitPeeringRg'),'/providers/Microsoft.Network/expressRouteCircuits/', parameters('expressRouteCircuitName'), '/peerings/AzurePrivatePeering')]"
+                },
+                "routingWeight": 0,
+                "enableInternetSecurity": false
+            }
+        },
         {
             "type": "Microsoft.Network/vpnServerConfigurations",
             "apiVersion": "2020-05-01",
