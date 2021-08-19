@@ -3,8 +3,12 @@ name: TestServers-Deployment
 jobs:
   build-and-deploy:
     runs-on: windows-latest
-    steps:
+    env:
+    # flag that determines if the test servers needs to be deployed to region#2
+    # this helps in reusing this workflow for single and multiregion scenarios
+      DEPLOY_MULTIREGION: false
 
+    steps:
       # Checkout code
     - uses: actions/checkout@main
 
@@ -32,6 +36,7 @@ jobs:
 
     - name: Run ARM deploy for Test Servers in region2-spoke1
       uses: azure/arm-deploy@v1
+      if: ${{ env.DEPLOY_MULTIREGION == true }}
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_360 }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
@@ -40,6 +45,7 @@ jobs:
 
     - name: Run ARM deploy for Test Servers in region2-spoke2
       uses: azure/arm-deploy@v1
+      if: ${{ env.DEPLOY_MULTIREGION == true }}
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_360 }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
