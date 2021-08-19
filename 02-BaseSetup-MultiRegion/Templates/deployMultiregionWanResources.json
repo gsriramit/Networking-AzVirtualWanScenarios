@@ -109,7 +109,7 @@
         "hub1_allowBranchToBranchTraffic": {
             "type": "bool"
         },
-         "hub2_allowBranchToBranchTraffic": {
+        "hub2_allowBranchToBranchTraffic": {
             "type": "bool"
         }
     },
@@ -425,6 +425,21 @@
                             "enableBgp": "[parameters('enableBgp')]",
                             "remoteVpnSite": {
                                 "id": "[resourceId('Microsoft.Network/vpnSites', parameters('vpnsitename'))]"
+                            },
+                            "routingConfiguration": {
+                                "associatedRouteTable": {
+                                    "id": "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub1_cfg').name,'defaultRouteTable')]"
+                                },
+                                "propagatedRouteTables": {
+                                    "labels": [
+                                        "default"
+                                    ],
+                                    "ids": [
+                                        {
+                                            "id": "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub1_cfg').name,'defaultRouteTable')]"
+                                        }
+                                    ]
+                                }
                             }
                         }
                     }
