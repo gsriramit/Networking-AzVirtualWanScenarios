@@ -19,8 +19,8 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_360 }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
-        template: ./02-BaseSetup-SingleRegion/Templates/deploySingleregionWanResources.json
-        parameters: ./02-BaseSetup-MultiRegion/Templates/deploySingleregionWanResources.Parameters.json
+        template: ./01-BaseSetup-SingleRegion/Templates/deploySingleregionWanResources.json
+        parameters: ./01-BaseSetup-SingleRegion/Templates/deploySingleregionWanResources.Parameters.json
 
    
       # output containerName variable from template
