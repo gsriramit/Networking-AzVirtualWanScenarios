@@ -86,6 +86,9 @@
         },
         "expressRouteConnectionAuthKey":{
             "type": "string"
+        },
+        "expressRouteCircuitSubscriptionId":{
+            "type": "string"
         }
     },
     "variables": {
@@ -399,7 +402,7 @@
                 },
                 "authorizationKey": "[parameters('expressRouteConnectionAuthKey')]",
                 "expressRouteCircuitPeering": {
-                    "id": "[concat(subscription().id,'/resourceGroups/',parameters('expressRouteCircuitPeeringRg'),'/providers/Microsoft.Network/expressRouteCircuits/', parameters('expressRouteCircuitName'), '/peerings/AzurePrivatePeering')]"
+                    "id": "[concat('/subscriptions/',parameters('expressRouteCircuitSubscriptionId'),'/resourceGroups/',parameters('expressRouteCircuitPeeringRg'),'/providers/Microsoft.Network/expressRouteCircuits/', parameters('expressRouteCircuitName'), '/peerings/AzurePrivatePeering')]"
                 },
                 "routingWeight": 0,
                 "enableInternetSecurity": false
