@@ -1,0 +1,27 @@
+on: workflow_dispatch
+name: SingleRegion-vWan-Deployment
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+    steps:
+
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true
+        
+    - name: Run ARM deploy for virtual Wan
+      uses: azure/arm-deploy@v1
+      with:
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_PAYG }}
+        resourceGroupName: ${{ secrets.AZURE_RG }}
+        template: ./03-Singleregion-IsolatedVnets/Templates/deploySingleregionWanResources.json
+        parameters: ./03-Singleregion-IsolatedVnets/Templates/deploySingleregionWanResources.Parameters.json
+
+   
+      # output containerName variable from template
+    # - run: echo ${{ steps.deploy.outputs.containerName }}
