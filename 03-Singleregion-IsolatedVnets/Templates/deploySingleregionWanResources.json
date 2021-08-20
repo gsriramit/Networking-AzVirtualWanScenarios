@@ -225,7 +225,7 @@
             "name": "[concat(variables('virtual_hub_cfg').name, '/HUB_RT_VNET')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub_cfg').name)]",
-                "[resourceId('Microsoft.Network/expressRouteGateways', format('{0}_ERGW', variables('virtual_hub_cfg').name))]"
+                "[resourceId('Microsoft.Network/expressRouteGateways', format('{0}_S2SvpnGW', variables('virtual_hub_cfg').name))]"
             ],
             "properties": {
                 "labels": [
@@ -240,7 +240,7 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub_cfg').name)]",
                 "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet1_cfg').name)]",
-                "[resourceId('Microsoft.Network/expressRouteGateways', format('{0}_ERGW', variables('virtual_hub_cfg').name))]"
+                "[resourceId('Microsoft.Network/vpnGateways', format('{0}_S2SvpnGW', variables('virtual_hub_cfg').name))]"
             ],
             "properties": {
                 "routingConfiguration": {
