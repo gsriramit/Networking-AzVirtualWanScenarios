@@ -379,7 +379,7 @@
             "name": "[format('{0}/{1}_connection', variables('virtual_hub_cfg').name, variables('vnet2_cfg').name)]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/virtualHubs', variables('virtual_hub_cfg').name)]",
-                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet3_cfg').name)]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('vnet2_cfg').name)]",
                 "[resourceId('Microsoft.Network/virtualHubs/hubVirtualNetworkConnections', variables('virtual_hub_cfg').name, format('{0}_connection', variables('vnet1_cfg').name))]",
                 "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub_cfg').name, 'HUB_RT_VNET')]",
                 "[resourceId('Microsoft.Network/virtualHubs/hubRouteTables', variables('virtual_hub_cfg').name, 'defaultRouteTable')]"
