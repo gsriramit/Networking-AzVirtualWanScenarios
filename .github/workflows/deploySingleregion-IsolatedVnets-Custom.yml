@@ -1,5 +1,5 @@
 on: workflow_dispatch
-name: SingleRegion-vWan-IsolatedVnets
+name: SingleRegion-vWan-CustomIsolatedVnets
 jobs:
   build-and-deploy:
     runs-on: windows-latest
@@ -19,8 +19,8 @@ jobs:
       with:
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_PAYG }}
         resourceGroupName: ${{ secrets.AZURE_RG }}
-        template: ./03-Singleregion-IsolatedVnets/Templates/deploySingleregionWanResources.json
-        parameters: ./03-Singleregion-IsolatedVnets/Templates/deploySingleregionWanResources.Parameters.json
+        template: ./03-Sin04-Singleregion-IsolatedVnets-Custom/Templates/deploySingleregionWanResources.json
+        parameters: ./04-Singleregion-IsolatedVnets-Custom/Templates/deploySingleregionWanResources.Parameters.json
 
    
       # output containerName variable from template
