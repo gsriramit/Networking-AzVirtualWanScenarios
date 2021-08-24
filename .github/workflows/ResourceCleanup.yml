@@ -1,0 +1,26 @@
+on: workflow_dispatch
+name: ResourceCleanup
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+    steps:
+
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true
+        
+    - name: Azure PowerShell Action
+      uses: Azure/powershell@v1
+      with:
+          inlineScript: 
+            .\ResourceCleanup\Scripts\Cleanup.ps1
+        # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
+          azPSVersion: latest 
+
+      # output containerName variable from template
+    # - run: echo ${{ steps.deploy.outputs.containerName }}
