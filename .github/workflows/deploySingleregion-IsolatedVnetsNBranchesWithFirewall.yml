@@ -6,7 +6,7 @@ jobs:
     env:
     # flag that determines if the test servers needs to be deployed to region#2
     # this helps in reusing this workflow for single and multiregion scenarios
-      DEPLOYMENT_REGION: "Southeast Asia"
+      DEPLOYMENT_REGION: "SoutheastAsia"
     steps:
 
       # Checkout code
