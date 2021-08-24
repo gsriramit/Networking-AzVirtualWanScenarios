@@ -1,4 +1,13 @@
-#This script removes all components of the Express Route Exp Setup
+[cmdletbinding()]
+param(
+    [parameter()]
+    [string]$SubscriptionId
+)
+
+#Set the subscription context
+Set-AzContext -Subscription $SubscriptionId
+
+#This script removes all components of the virtual wan Setup
 
 #Remove all resources by deploying and emtpy template using Complete mode
 $resourceGroupName = 'rg-networking-dev01'
