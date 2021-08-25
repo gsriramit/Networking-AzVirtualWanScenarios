@@ -252,6 +252,53 @@
                                 "destinationPorts": [
                                     "*"
                                 ]                               
+                            },
+                            {
+                                "ruleType": "NetworkRule",
+                                "name": "AllowVnetToBranchCat1",
+                                "ipProtocols": [
+                                    "TCP",
+                                    "UDP",
+                                    "ICMP"
+                                ],
+                                "sourceAddresses": [
+                                    "10.10.0.0/24",
+                                    "10.11.0.0/24"
+                                ],
+                                "sourceIpGroups": [],
+                                "destinationAddresses": [
+                                    "172.20.100.0/24",
+                                    "192.168.29.50",
+                                    "192.168.29.52"
+                                ],
+                                "destinationIpGroups": [],
+                                "destinationFqdns": [],
+                                "destinationPorts": [
+                                    "*"
+                                ]
+                            },
+                            {
+                                "ruleType": "NetworkRule",
+                                "name": "AllowVnetToBranchCat2",
+                                "ipProtocols": [
+                                    "TCP",
+                                    "UDP",
+                                    "ICMP"
+                                ],
+                                "sourceAddresses": [
+                                    "10.12.0.0/24",
+                                    "10.13.0.0/24"
+                                ],
+                                "sourceIpGroups": [],
+                                "destinationAddresses": [
+                                    "172.31.255.0/24",
+                                    "172.20.100.0/24"
+                                ],
+                                "destinationIpGroups": [],
+                                "destinationFqdns": [],
+                                "destinationPorts": [
+                                    "*"
+                                ]
                             }
                         ]
                     }
