@@ -19,14 +19,14 @@ jobs:
         enable-AzPSSession: true
 
     # Powershell action to complete the pre-req tasks
-    # the script creates the target resource group
-    # - name: Azure PowerShell Action
-    #   uses: Azure/powershell@v1
-    #   with:
-    #       inlineScript: 
-    #         .\05-Singleregion-IsolatedVnetsNBranchesWithFirewall\Scripts\Prerequisite-tasks.ps1 -SubscriptionId ${{ secrets.AZURE_SUBSCRIPTION_PAYG }} -Location ${{env.DEPLOYMENT_REGION}}
-    #     # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
-    #       azPSVersion: latest 
+   # the script creates the target resource group
+    - name: Azure PowerShell Action
+      uses: Azure/powershell@v1
+      with:
+          inlineScript: 
+            .\05-Singleregion-IsolatedVnetsNBranchesWithFirewall\Scripts\Prerequisite-tasks.ps1 -SubscriptionId ${{ secrets.AZURE_SUBSCRIPTION_PAYG }} -Location ${{env.DEPLOYMENT_REGION}}
+        # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
+          azPSVersion: latest 
 
     - name: Run ARM deploy for virtual Wan
       uses: azure/arm-deploy@v1

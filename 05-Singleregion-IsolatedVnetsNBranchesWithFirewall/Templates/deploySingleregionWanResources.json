@@ -215,6 +215,10 @@
                             {
                                 "ruleType": "NetworkRule",
                                 "name": "AllowBranchToVnetCat1",
+                                 "ipProtocols": [ 
+                                     "TCP",
+                                     "ICMP"
+                                ],
                                 "sourceAddresses": [
                                     "172.20.100.0/24",
                                     "192.168.29.50",
@@ -223,11 +227,18 @@
                                 "destinationAddresses":[
                                     "10.10.0.0/16",
                                     "10.11.0.0/16"
-                                ]                               
+                                ],
+                                "destinationPorts": [
+                                    "*"
+                                ]                     
                             },
                             {
                                 "ruleType": "NetworkRule",
                                 "name": "AllowBranchToVnetCat2",
+                                 "ipProtocols": [ 
+                                     "TCP",
+                                     "ICMP"
+                                ],
                                 "sourceAddresses": [
                                     "172.20.100.0/24",
                                     "172.31.255.1",
@@ -237,6 +248,9 @@
                                 "destinationAddresses":[
                                     "10.12.0.0/16",
                                     "10.13.0.0/16"
+                                ],
+                                "destinationPorts": [
+                                    "*"
                                 ]                               
                             }
                         ]
