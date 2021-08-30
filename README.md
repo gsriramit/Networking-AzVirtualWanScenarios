@@ -55,4 +55,19 @@ The blog also has an internal reference to an youtube video that helps you setup
 ### Setting up the S2S VPN Connection for BGP Peering with Azure VirtualWAN
 The steps to create a BGP connection between the RRAS and the Azure VPN Gateway have been provided in the [CommonScripts/RRAS Setup](CommonScripts/RRAS-Setup/README.md)
 
+## GitHub Actions for Deployment
+If you do not have a dedicated DevOps setup for the deployment of the ARM templates, you can use the workflow files provided in this repo. The following table provides a mapping of the workflows to the scenarios.  
+**Note**: The actions are dependent on the following data and are to be saved as secrets in the repository
+1. An Azure Service Principal Credentials that has access to the target environment
+2. The subscription Id of the target subscription
+3. Resource Group to which the resources would be deployed
+4. Any other secure information that needs to be read from the secrets
 
+| Scenario                                           | Workflow file                                             |
+|----------------------------------------------------|-----------------------------------------------------------|
+| 01-BaseSetup-SingleRegion                          | deploySingleregionWanResources.yml                        |
+| 02-BaseSetup-MultiRegion                           | deployMultiregionWanResources.yml                         |
+| 03-Singleregion-IsolatedVnets                      | deploySingleregion-IsolatedVnets.yml                      |
+| 04-Singleregion-IsolatedVnets-Custom               | deploySingleregion-IsolatedVnets-Custom.yml               |
+| 05-Singleregion-IsolatedVnetsNBranchesWithFirewall | deploySingleregion-IsolatedVnetsNBranchesWithFirewall.yml |
+| Deploy Test VMs in the Azure Spokes                | deploytestresources.yml                                   |
