@@ -53,6 +53,6 @@ The blog also has an internal reference to an youtube video that helps you setup
 [Setting up S2S with RRAS](https://www.youtube.com/watch?v=Ty4O51U_0Ds&t=266s)  
 
 ### Setting up the S2S VPN Connection for BGP Peering with Azure VirtualWAN
-The steps to create a BGP connection between the RRAS and the Azure VPN Gateway have been provided in the [CommonScripts/RRAS Setup](CommonScripts/RRAS Setup)
+The steps to create a BGP connection between the RRAS and the Azure VPN Gateway have been provided in the [CommonScripts/RRAS Setup](CommonScripts/RRAS-Setup/README.md)
 
 
