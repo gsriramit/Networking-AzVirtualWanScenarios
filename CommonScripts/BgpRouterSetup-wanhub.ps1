@@ -1,4 +1,3 @@
-﻿
 #Get info of the s2s vpn interface
 $azS2SVpnInterface = Get-VpnS2SInterface -Name AzureVHubS2SConnection
 
@@ -12,22 +11,18 @@ Set-VpnS2SInterface -Name AzureVPNS2SConnection -Destination 40.119.238.198 -IPv
 #Enable BGP Router on this RRAS Server
 Add-BgpRouter -BgpIdentifier 192.168.29.52 -LocalASN 65050
 
-
-#Add-BgpPeer -Name AzureVPN -LocalIPAddress 192.168.29.52 -PeerIPAddress 10.50.5.14 -LocalASN 65050 -PeerASN 65010
-
+# Add BGP Pering between this instance of RRAS and the Azure VPN Gateway
+# Use the GW's public Ip address & the BGP Peer IP address from the downloaded VPN config file
 Add-BgpPeer -Name AzureVPN -LocalIPAddress 192.168.29.52 -PeerIPAddress 10.100.0.13 -LocalASN 65050 -PeerASN 65515
 
+# Advertise the routes that the hub needs to learn
+Add-BgpCustomRoute -Network 192.168.29.0/24 -PassThru
 
-#route ADD -p 10.50.0.0 MASK 255.255.0.0 192.168.29.52
-#route ADD -p 10.50.5.14 MASK 255.255.255.255 192.168.29.52
-
-
+# Get the information of the BGP peer (VPN Gateway) and the connection status
 Get-BgpPeer
 
+# Get the route information learnt from the hub by this instance of VPN Server
 Get-BgpRouteInformation
 
-Add-BgpCustomRoute -Network 192.168.29.52/32 -PassThru
-
-Add-BgpCustomRoute -Network 192.168.29.50/32 -PassThru
-
-Remove-BgpPeer -Name AzureVPN
+# Command to remove the BGP Peer. Use this everytime you do a fresh deploy of the hub and hence the VPN connection.
+# Remove-BgpPeer -Name AzureVPN
