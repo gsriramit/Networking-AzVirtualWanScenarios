@@ -106,6 +106,12 @@
         "expressRouteCircuitName": {
             "type": "string"
         },
+        "expressRouteCircuitSubscriptionId":{
+            "type": "string"
+        },
+        "expressRouteConnectionAuthKey":{
+            "type": "string"
+        },
         "hub1_allowBranchToBranchTraffic": {
             "type": "bool"
         },
@@ -515,8 +521,9 @@
                         "staticRoutes": []
                     }
                 },
+                "authorizationKey": "[parameters('expressRouteConnectionAuthKey')]",
                 "expressRouteCircuitPeering": {
-                    "id": "[concat(subscription().id,'/resourceGroups/',parameters('expressRouteCircuitPeeringRg'),'/providers/Microsoft.Network/expressRouteCircuits/', parameters('expressRouteCircuitName'), '/peerings/AzurePrivatePeering')]"
+                    "id": "[concat('/subscriptions/',parameters('expressRouteCircuitSubscriptionId'),'/resourceGroups/',parameters('expressRouteCircuitPeeringRg'),'/providers/Microsoft.Network/expressRouteCircuits/', parameters('expressRouteCircuitName'), '/peerings/AzurePrivatePeering')]"
                 },
                 "routingWeight": 0,
                 "enableInternetSecurity": false
