@@ -431,6 +431,9 @@
             "apiVersion": "2020-05-01",
             "name": "[format('{0}_P2SvpnServerConfiguration', variables('virtual_hub_cfg').name)]",
             "location": "[parameters('hub_location')]",
+             "dependsOn": [
+                "[resourceId('Microsoft.Network/expressRouteGateways', format('{0}_ERGW', variables('virtual_hub_cfg').name))]"
+            ],
             "properties": {
                 "vpnProtocols": [
                     "IkeV2",
