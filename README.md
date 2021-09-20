@@ -50,6 +50,17 @@ The VPN site resource needs to be mapped to the VPN Gateway connections
                 ],
 ```
 
+## Dependencies Map
+| Resource                                          | Dependencies                                                                                                                                                                                                                                       |
+|---------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Virtual Hubs                                      | Virtual WAN                                                                                                                                                                                                                                        |
+| VPN Site                                          | Virtual WAN                                                                                                                                                                                                                                        |
+| Virtual Network Connections with the regional Hub | a. Virtual Hub b. Virtual Network that is connecting to the hub and c. S2S VPN Gateway in the same region. Note: The S2S VPN Gateway is a mandatory dependency if the Azure Networks need to use the gateway transit feature to reach the branches |
+| S2S VPN Gateway                                   | Regional Virtual hub                                                                                                                                                                                                                               |
+| Express Route Gateways                            | Virtual network connections to the regional hub. **Cascading Dependencies** - dependency of the vnet connections on the vnets and the s2s vpn gateway                                                                                              |
+| Express Route Connections                         | Express Route Gateway that the circuit is connecting to                                                                                                                                                                                            |
+| VPN Server Config (P2S VPN Connection)            | Express Route Gateway in the same region                                                                                                                                                                                                           |
+| P2S VPN Gateways                                  | VPN Server Configurations                                                                                                                                                                                                                          |
 
 ## GitHub Actions for Deployment
 If you do not have a dedicated DevOps setup for the deployment of the ARM templates, you can use the workflow files provided in this repo. The following table provides a mapping of the workflows to the scenarios.  
