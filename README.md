@@ -79,3 +79,46 @@ If you do not have a dedicated DevOps setup for the deployment of the ARM templa
 | 05-Singleregion-IsolatedVnetsNBranchesWithFirewall | deploySingleregion-IsolatedVnetsNBranchesWithFirewall.yml |
 | Deploy Test VMs in the Azure Spokes                | deploytestresources.yml                                   |
 
+### Prerequisites before every fresh deployment
+If you cleanup the virtual wan and associated resources after every scenario, be sure to complete the prerequisites before every fresh run
+1. Create a resource group named "rg-networking-dev01". The name could vary depending on the name that you choose for your deployment resource group. The same should be updated in the GitHub Secrets
+   - This has been automated as a step in one of the [workflows](.github/workflows/deploySingleregion-IsolatedVnetsNBranchesWithFirewall.yml). Include this step in all of your workflows if get rid of the entire resource group after the completion of every scenario
+   ```
+     # Powershell action to complete the pre-req tasks
+   # the script creates the target resource group
+    - name: Azure PowerShell Action
+      uses: Azure/powershell@v1
+      with:
+          inlineScript: 
+            .\05-Singleregion-IsolatedVnetsNBranchesWithFirewall\Scripts\Prerequisite-tasks.ps1 -SubscriptionId ${{ secrets.AZURE_SUBSCRIPTION_PAYG }} -Location ${{env.DEPLOYMENT_REGION}}
+        # Azure PS version to be used to execute the script, example: 1.8.0, 2.8.0, 3.4.0. To use the latest version, specify "latest".
+          azPSVersion: latest 
+          ```
+2. Modify the public ip of the vpn site (local network gateway in the params file) if you are using an RRAS machine and the router's Public IP changes with every restart. 
+
+### GitHub Secrets for the Workflows
+Add the following GitHub Secrets to be able to refer to them in the actions (workflows). Please note that you can enhance the workflows as per your needs.
+| GitHub Secret            | Value                                                                                                                    |
+|--------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| AZURE_CREDENTIALS        | "{   ""clientId"": """",
+  ""name"": """",
+  ""clientSecret"": """",
+  ""subscriptionId"": """",
+  ""tenantId"": """"
+}" |
+| AZURE_SUBSCRIPTION_PAYG  | Id of the subscription                                                                                                   |
+| AZURE_RG                 | Resource Group Name string                                                                                               |
+
+### GitHub Trigger
+All the workflows in this repository would be kicked off using a **workflow_dispatch** which is a manual trigger. If you need the deployment to be triggered on the completion of a PR or a code checkin to DEV, be sure to change that part of the code
+```
+on: workflow_dispatch
+```
+## Cost-Saving Measures
+1. The author of this [vWan Playground repository](https://github.com/StefanIvemo/vwan-playground)
+) has provided a way to delete the vWan resource group using an empty RG deployment. This has not worked for me 100% of the time. However it is always good to try
+2. Stop/Deallocate all the virtual machines if you aren't using them. This wont delete the machines but would turn them off so that you dont have to pay for the compute resources.
+3. Delete the bastion hosts when you you dont have a need to RDP into the machines to test the connectivity test cases
+4. Deploy to multiple regions only if you have absolutely compelling reasons to. The hybrid connection gateways costs a lot and having gateways in 2 or more regions is definitely going to be heavy on your wallet
+5. Modify the deployment to have only the necessary hybrid connection gateways if you do not always need all the 3 gateways.
+6. A common measure known to all, for lab exercises choose to deploy the wan and the hub in regions that cost less and also have support for all the vWan requirements and scalability needs
