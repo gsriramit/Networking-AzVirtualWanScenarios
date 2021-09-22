@@ -119,6 +119,6 @@ on: workflow_dispatch
 ) has provided a way to delete the vWan resource group using an empty RG deployment. This has not worked for me 100% of the time. However it is always good to try
 2. Stop/Deallocate all the virtual machines if you aren't using them. This wont delete the machines but would turn them off so that you dont have to pay for the compute resources.
 3. Delete the bastion hosts when you you dont have a need to RDP into the machines to test the connectivity test cases
-4. Deploy to multiple regions only if you have absolutely compelling reasons to. The hybrid connection gateways costs a lot and having gateways in 2 or more regions is definitely going to be heavy on your wallet
-5. Modify the deployment to have only the necessary hybrid connection gateways if you do not always need all the 3 gateways.
-6. A common measure known to all, for lab exercises choose to deploy the wan and the hub in regions that cost less and also have support for all the vWan requirements and scalability needs
+4. Deploy to multiple regions only if you have absolutely compelling reasons to. The hybrid connection gateways cost a lot and having gateways in 2 or more regions is definitely going to be heavy on your wallet
+5. Modify the deployment to have only the necessary hybrid connection gateways if you do not always need all the 3.
+6. A common measure known to all- for lab exercises choose to deploy the wan and the hub in regions that the resource costs are less and also have support for all the vWan requirements and scalability needs
