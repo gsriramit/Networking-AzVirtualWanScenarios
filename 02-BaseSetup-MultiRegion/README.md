@@ -46,4 +46,4 @@ The following tables captures the next hop when examining the routing between th
 1. The P2S VPN Gateway has a dependency on the regional express route gateway. 
    - The above mentioned dependency requires you to deploy an express route gateway in a region that you wish to have p2s VPN connections even if you dont plan on having direct express route connections using the same gateway
 2. The express route gateway is made dependent on the last of all VirtualHub Network Connections in a specific region  
-These factors should be per the original design and I have reached out to Microfot to get more information on the "why"
+These factors should be per the original design and I have reached out to Microsoft to get more information on the "why"
